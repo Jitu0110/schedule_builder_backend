@@ -17,12 +17,6 @@ public class EventService {
     private EventRepository eventRepository;
 
 
-    // Add a custom event
-    public Event addEvent(Event event){
-        Event savedEvent = eventRepository.save(event);
-        return savedEvent;
-    }
-
     //Returns all events part of the Events Index
     public List<Event> getAllEvents(){
         List<Event> eventList = StreamSupport.stream(eventRepository.findAll().spliterator(), false)

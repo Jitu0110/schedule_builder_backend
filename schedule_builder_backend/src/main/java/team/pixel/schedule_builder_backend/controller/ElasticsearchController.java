@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
@@ -23,7 +21,6 @@ import team.pixel.schedule_builder_backend.service.EventService;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-@Api(value = "Schedule Builder - Elasticsearch APIs", description = "Operations pertaining to schedule builder - Elasticsearch")
 public class ElasticsearchController {
 
     @Autowired
@@ -43,7 +40,6 @@ public class ElasticsearchController {
 
 
     @GetMapping("/course/all")
-    @ApiOperation(value = "Get all courses", response = List.class)
     public ResponseEntity<List<Course>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
@@ -68,6 +64,33 @@ public class ElasticsearchController {
         eventMap.put("isOutdoor", event.getIsOutdoor());
 
         request.source(eventMap);
+
+        try {
+            restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            log.info("Exception caught: " + e);
+        }
+
+        return ResponseEntity.ok("Done");
+
+    }
+
+    @PostMapping("/course/add")
+    public ResponseEntity<String> courseAdd(@RequestBody Course course) {
+
+        IndexRequest request = new IndexRequest("courses");
+
+        Map<String, Object> courseMap = new HashMap<>();
+        courseMap.put("courseName", course.getCourseName());
+        courseMap.put("courseInstructor", course.getCourseInstructor());
+        courseMap.put("courseVenue", course.getCourseVenue());
+        courseMap.put("courseCode", course.getCourseCode());
+        courseMap.put("isRecurring", course.getIsRecurring());
+        courseMap.put("courseDescription", course.getCourseDescription());
+        courseMap.put("courseStartTime", course.getCourseStartTime());
+        courseMap.put("courseEndTime", course.getCourseEndTime());
+
+        request.source(courseMap);
 
         try {
             restHighLevelClient.index(request, RequestOptions.DEFAULT);
