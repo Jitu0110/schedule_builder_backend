@@ -14,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.pixel.schedule_builder_backend.dto.Course;
 import team.pixel.schedule_builder_backend.dto.Event;
+import team.pixel.schedule_builder_backend.dto.UserSchedule;
 import team.pixel.schedule_builder_backend.service.CourseService;
 import team.pixel.schedule_builder_backend.service.EventService;
+import team.pixel.schedule_builder_backend.service.UserScheduleService;
 
 
 @RestController
@@ -31,6 +33,9 @@ public class ElasticsearchController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private UserScheduleService userScheduleService;
 
 
     @GetMapping("/course/search")
@@ -108,4 +113,45 @@ public class ElasticsearchController {
     }
 
 
+    @PostMapping("/userschedule")
+    public ResponseEntity<String> userScheduleAdd(@RequestBody UserSchedule userSchedule) {
+        IndexRequest request = new IndexRequest("userschedule");
+
+        Map<String, Object> userScheduleMap = new HashMap<>();
+
+        Map<String, String> parttimeScheduleMap = new HashMap<>();
+        Map<String, String> personalAppointmentMap = new HashMap<>();
+
+        userSchedule.getPartTimeSchedule().forEach( (key ,value)-> {
+            parttimeScheduleMap.put(key,value);
+        });
+
+        userSchedule.getPersonalAppointment().forEach( (key ,value)-> {
+            personalAppointmentMap.put(key,value);
+        });
+
+        userScheduleMap.put("coursesEnrolled", userSchedule.getCoursesEnrolled());
+        userScheduleMap.put("major", userSchedule.getMajor());
+        userScheduleMap.put("partTime", userSchedule.getPartTime());
+        userScheduleMap.put("partTimeLoc",userSchedule.getPartTimeLoc());
+        userScheduleMap.put("partTimeSchedule",  parttimeScheduleMap);
+        userScheduleMap.put("personalAppointment", personalAppointmentMap);
+        userScheduleMap.put("userEmail", userSchedule.getUserEmail());
+        userScheduleMap.put("yearOfStudy",userSchedule.getYearOfStudy());
+
+        request.source(userScheduleMap);
+
+        try {
+            restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            log.info("Exception caught: " + e);
+        }
+
+        return ResponseEntity.ok("Done");
+    }
+
+    @GetMapping("/userschedule")
+    public ResponseEntity<List<UserSchedule>> getUserSchedule(@RequestParam String emailId) {
+        return ResponseEntity.ok(userScheduleService.getUserScheduleByEmail(emailId));
+    }
 }
