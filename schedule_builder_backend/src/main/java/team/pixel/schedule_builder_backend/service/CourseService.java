@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import team.pixel.schedule_builder_backend.dto.Course;
 import team.pixel.schedule_builder_backend.repository.CourseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -31,5 +32,15 @@ public class CourseService {
                 .collect(Collectors.toList());
 
         return courseList;
+    }
+
+
+    public List<String> fetchAllCourseCodes() {
+        Iterable<Course> documents = courseRepository.findAll();
+        List<String> courseCodes = new ArrayList<>();
+        for (Course document : documents) {
+            courseCodes.add(document.getCourseCode());
+        }
+        return courseCodes;
     }
 }

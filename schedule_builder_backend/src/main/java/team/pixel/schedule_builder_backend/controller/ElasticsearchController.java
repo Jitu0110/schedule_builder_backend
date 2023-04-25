@@ -38,6 +38,11 @@ public class ElasticsearchController {
         return ResponseEntity.ok(courseService.getCourseByCourseCode(query));
     }
 
+    @GetMapping("/course/codes")
+    public ResponseEntity<List<String>> getCourseCodes() {
+        return ResponseEntity.ok(courseService.fetchAllCourseCodes());
+    }
+
 
     @GetMapping("/course/all")
     public ResponseEntity<List<Course>> getAllCourses() {
