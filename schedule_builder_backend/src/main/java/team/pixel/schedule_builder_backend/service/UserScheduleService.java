@@ -17,9 +17,9 @@ public class UserScheduleService {
     @Autowired
     UserScheduleRepository userScheduleRepository;
 
-    public List<UserSchedule> getUserScheduleByEmail(String emailId) {
+    public UserSchedule getUserScheduleByEmail(String emailId) {
         List<UserSchedule> userScheduleList = userScheduleRepository.findByUserEmail(emailId);
-        return userScheduleList;
+        return userScheduleList.get(0);
     }
 
 

@@ -154,7 +154,7 @@ public class ElasticsearchController {
     }
 
     @GetMapping("/userschedule")
-    public ResponseEntity<List<UserSchedule>> getUserSchedule(@RequestParam String emailId) {
+    public ResponseEntity<UserSchedule> getUserSchedule(@RequestParam String emailId) {
         return ResponseEntity.ok(userScheduleService.getUserScheduleByEmail(emailId));
     }
 
