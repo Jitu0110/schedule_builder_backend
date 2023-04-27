@@ -117,6 +117,9 @@ public class ElasticsearchController {
     public ResponseEntity<String> userScheduleAdd(@RequestBody UserSchedule userSchedule) {
         IndexRequest request = new IndexRequest("userschedule");
 
+        //Delete previous User schedule for the email, if exists
+        userScheduleService.deleteUserScheduleIfExists(userSchedule.getUserEmail());
+
         Map<String, Object> userScheduleMap = new HashMap<>();
 
         Map<String, String> parttimeScheduleMap = new HashMap<>();
@@ -154,4 +157,11 @@ public class ElasticsearchController {
     public ResponseEntity<List<UserSchedule>> getUserSchedule(@RequestParam String emailId) {
         return ResponseEntity.ok(userScheduleService.getUserScheduleByEmail(emailId));
     }
+
+
+    //TBD
+//    @GetMapping("/dailyschedule")
+//    public ResponseEntity<List<UserSchedule>> getUserSchedule(@RequestParam String emailId, @RequestParam String currentDate) {
+//        return ResponseEntity.ok(userScheduleService.getUserDailySchedule(emailId,currentDate));
+//    }
 }

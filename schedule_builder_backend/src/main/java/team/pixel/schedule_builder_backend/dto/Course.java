@@ -1,12 +1,10 @@
 package team.pixel.schedule_builder_backend.dto;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.annotation.Nullable;
 
 
 @Document(indexName = "courses")
