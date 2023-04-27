@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.pixel.schedule_builder_backend.dto.Course;
+import team.pixel.schedule_builder_backend.dto.DailyEventDetails;
 import team.pixel.schedule_builder_backend.dto.Event;
 import team.pixel.schedule_builder_backend.dto.UserSchedule;
 import team.pixel.schedule_builder_backend.service.CourseService;
@@ -159,9 +160,8 @@ public class ElasticsearchController {
     }
 
 
-    //TBD
-//    @GetMapping("/dailyschedule")
-//    public ResponseEntity<List<UserSchedule>> getUserSchedule(@RequestParam String emailId, @RequestParam String currentDate) {
-//        return ResponseEntity.ok(userScheduleService.getUserDailySchedule(emailId,currentDate));
-//    }
+    @GetMapping("/dailyschedule")
+    public ResponseEntity<DailyEventDetails> getUserSchedule(@RequestParam String emailId, @RequestParam String calendarDate) {
+        return ResponseEntity.ok(userScheduleService.getUserDailySchedule(emailId,calendarDate));
+    }
 }
